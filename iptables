@@ -1,0 +1,18 @@
+sudo iptables -A INPUT -m state –state ESTABLISHED,RELATED -j ACCEPT
+sudo iptables -A OUTPUT -m state --state ESTABLISHED,RELATED -j ACCEPT
+sudo iptables -A INPUT -p tcp –dport 22 -j ACCEPT
+sudo iptables -t filter -A INPUT -p icmp --icmp-type echo-request -m limit --limit 5/minute -j ACCEPT
+sudo iptables -t filter -A INPUT -p icmp -j DROP
+sudo iptables -t filter -A OUTPUT -p icmp --icmp-type echo-reply -j ACCEPT
+sudo iptables -A INPUT -s 127.0.0.1 -p icmp -j ACCEPT
+sudo iptables -A INPUT -p tcp –dport 80 -j ACCEPT
+sudo iptables -A INPUT -p tcp –dport 21 -j ACCEPT
+sudo iptables -A INPUT -i lo -j ACCEPT
+sudo iptables -A OUTPUT -o lo -j ACCEPT
+sudo iptables -A OUTPUT -d DNSServer -p udp -dport 53 -j ACCEPT
+sudo iptables -A INPUT -s DNSServer -p udp -sport 53 -j ACCEPT
+#sudo nano /etc/proftpd/proftpd.conf
+# PassivePorts 65530 65534
+#sudo /etc/init.d/proftpd restart
+sudo iptables -A INPUT -p tcp –dport 65530:65534 -j ACCEPT
+sudo iptables -A INPUT -j DROP
